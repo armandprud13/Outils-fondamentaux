@@ -1,0 +1,120 @@
+from tkinter import *
+from random import *
+import math
+
+fenetre = Tk()
+fenetre.title("Puissance 4 - Outils Fondamentaux")
+can = Canvas(fenetre, width=700, height=600)
+can.grid(row=1, column=1)
+
+#tp6
+def calc_vecteur(pt_a, pt_b):
+    """Calcule le vecteur AB (TP6)."""
+    return (pt_b[0] - pt_a[0], pt_b[1] - pt_a[1])
+
+def longeur_norme(vec):
+    """Calcule la norme d'un vecteur (TP6)."""
+    return math.hypot(vec[0], vec[1])
+
+#tp1
+
+def presque_egaux(a, b):
+    """Vérifie si deux flottants sont presque égaux (TP1)."""
+    return abs(a - b) < 1e-5
+
+
+
+
+
+
+def trace_grille():
+    S = 0
+    for x in range(5):
+        can.create_line(0, 100 + S, 700, 100 + S, fill='black')
+        S = S + 100
+    S = 0
+    for i in range(6):
+        S = S + 100
+        can.create_line(0 + S, 0, 0 + S, 600, fill='black')
+
+trace_grille()
+grille = [[0, 0, 0, 0, 0, 0, 0] for i in range(6)]
+joueur = randint(1, 2)
+partie_finie = False
+
+def gagnant():
+    # 1. Vérification horizontale
+    for ligne in range(6):
+        for col in range(4):
+            if grille[ligne][col] == grille[ligne][col+1] == \
+               grille[ligne][col+2] == grille[ligne][col+3] != 0:
+                return grille[ligne][col]
+
+    # 2. Vérification verticale
+    for ligne in range(3):
+        for col in range(7):
+            if grille[ligne][col] == grille[ligne+1][col] == \
+               grille[ligne+2][col] == grille[ligne+3][col] != 0:
+                 return grille[ligne][col]
+
+    # 3. Vérification diagonale descendante (\)
+    for ligne in range(3):
+        for col in range(4):
+            if grille[ligne][col] == grille[ligne+1][col+1] == \
+               grille[ligne+2][col+2] == grille[ligne+3][col+3] != 0:
+                return grille[ligne][col]
+
+    # 4. Vérification diagonale montante (/)
+    for ligne in range(3, 6):
+        for col in range(4):
+            if grille[ligne][col] == grille[ligne-1][col+1] == \
+               grille[ligne-2][col+2] == grille[ligne-3][col+3] != 0:
+                return grille[ligne][col]
+
+    return 0
+
+def clic(event):
+    global joueur, partie_finie
+    if partie_finie:
+        return
+
+    c = int(event.x / 100)
+    if c < 0 or c > 6:
+        return
+
+    ligne = 5
+    while ligne >= 0 and grille[ligne][c] != 0:
+        ligne = ligne - 1
+
+    if ligne != -1:
+        grille[ligne][c] = joueur
+       
+        v = calc_vecteur((0, 0), (100 * c, 100 * ligne))
+        _ = longeur_norme(v)
+
+        if joueur == 1:
+            can.create_oval(100 * c, 100 * ligne, 100 * c + 100, 100 * ligne + 100, fill='yellow')
+        else:
+            can.create_oval(100 * c, 100 * ligne, 100 * c + 100, 100 * ligne + 100, fill='red')
+
+    
+        g = gagnant()
+        if g != 0:
+            print(f">>> Le joueur {g} a gagné ! <<<")
+        
+            can.create_text(350, 300, text=f"JOUEUR {g} A GAGNÉ !", font=("Arial", 35, "bold"), fill="blue")
+            partie_finie = True
+            return
+
+       
+        if joueur == 1:
+            joueur = 2
+        else:
+            joueur = 1
+
+can.bind('<Button-1>', clic)
+
+print("=== PUISSANCE 4 LANCÉ ===")
+print("Clique sur la grille pour jouer.")
+
+fenetre.mainloop()
