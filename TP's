@@ -1,0 +1,1023 @@
+########TP1########
+
+#ex1,1
+
+nb= 2026
+b= 7
+q= n// b
+r= n % b
+print(q,r)
+print(q* b + r)
+
+#ex1,2
+
+dc = 123456789 % 10  #
+
+
+sdc = 123456789 // 10  
+
+print(dc, sdc)
+
+#ex2.1
+res = 0
+
+
+for i in range(1000):
+    res += 0.1
+
+ecart = res - 100
+
+print(res)
+print(ecart)
+
+#ex2.2
+
+def presque_egaux(a, b):
+    to = 0.000000009
+    return abs(a - b) < to
+
+print(0.1 + 0.2 == 0.3)
+print(presque_egaux(0.1 + 0.2, 0.3))
+
+#ex3.1
+
+for i in range(1, 11):
+    produit = 7 * i
+    print("7 x", i, "=", produit)
+
+#ex3.2
+
+somme = 0
+for i in range(1, 101):
+    somme = somme + i
+
+n = 100
+resu = n * (n + 1) // 2
+
+print("Somme boucle :", somme)
+print("Somme formule :", resu)
+
+#ex4.1
+def nombre_de_chiffres(n):
+    c = 0
+    if n == 0:
+        return 1
+    while n > 0:
+        n = n // 10
+        c = c + 1
+    return c
+
+print(nombre_de_chiffres(2026))
+print(nombre_de_chiffres(7))
+
+#ex5.1
+import math
+
+def heron(a, tolerance=1e-12):
+    """Racine carrée de a par la méthode de Héron."""
+    
+    if a < 0:
+        
+        raise ValueError("pas de racine carrée réelle pour un nombre négatif")
+    
+    if a == 0:
+        
+        return 0.0
+    
+    x = float(a)
+    
+    tours = 0
+    
+    while True:
+        
+        suivant = 0.5 * (x + a / x)
+        
+        tours = tours + 1
+        
+        if abs(suivant - x) <= tolerance * abs(suivant):
+            
+            return suivant
+        
+        x = suivant
+
+print(heron(2))
+print(math.sqrt(2))
+print(abs(heron(2) - math.sqrt(2)) < 1e-12)
+
+
+###ex6.1
+
+def vers_binaire(n):
+    if n == 0:
+        return "0"
+    res = ""
+    while n > 0:
+        r = n % 2
+        res = str(r) + res
+        n = n // 2
+    return res
+
+print(vers_binaire(37))
+print(vers_binaire(0))
+
+#ex6.2
+
+import sys
+
+eps = 1.0
+while 1.0 + eps / 2 != 1.0:
+    
+eps = eps / 2
+
+print(eps)
+print(sys.float_info.epsilon)
+print(eps == 2 ** -52)
+
+
+
+########TP2########
+
+def diviseur(n):
+    diviseurs = []
+    for i in range(1, n + 1):
+        if n % i == 0:
+            diviseurs.append(i)
+    return diviseurs
+
+print(diviseur(28)) 
+
+#ex2,1
+
+def pgcd_naif(a, b):
+    m = a
+    if b < a:
+        m = b
+    
+    p = 1
+    for i in range(1, m + 1):
+        if a % i == 0:
+            if b % i == 0:
+                p = i
+    return p
+
+def pgcd(a, b):
+    while b > 0:
+        r = a % b
+        a = b
+        b = r
+    return a
+
+print(pgcd_naif(1071, 462))
+print(pgcd(1071, 462))
+
+#ex3
+def est_premier_naif(n):
+    """Teste la primalité en essayant tous les diviseurs jusqu'à n - 1."""
+    if n < 2:
+        return False
+    for d in range(2, n):
+        if n % d == 0:
+            return False
+    return True
+
+print(est_premier_naif(97), est_premier_naif(91))
+
+def est_premier(n):
+    """Teste la primalité en s'arrêtant à la racine carrée de n."""
+    if n < 2:
+        return False
+    if n % 2 == 0:
+        return n == 2
+    d = 3
+    while d * d <= n:
+        if n % d == 0:
+            return False
+        d = d + 2
+    return True
+
+print(est_premier(97), est_premier(91), est_premier(2), est_premier(1))
+nombres = [10007, 100003, 1000003]
+
+for n in nombres:
+    t0 = time.perf_counter()
+    est_premier_naif(n)
+    t1 = time.perf_counter()
+    print( n, t1 - t0, )
+
+
+for n in nombres:
+    t0 = time.perf_counter()
+    est_premier(n)
+    t1 = time.perf_counter()
+    print(n, t1 - t0)
+
+#ex4 
+def crible(limite):
+    """Renvoie la liste des nombres premiers de 2 à limite inclus."""
+    est_premier_tab = [True] * (limite + 1)
+    est_premier_tab[0] = False
+    if limite >= 1:
+        est_premier_tab[1] = False
+    d = 2
+    while d * d <= limite:
+        if est_premier_tab[d]:
+            for multiple in range(d * d, limite + 1, d):
+                est_premier_tab[multiple] = False
+        d = d + 1
+    return [n for n in range(limite + 1) if est_premier_tab[n]]
+
+premiers = crible(100)
+print(premiers)
+print(len(premiers), "premiers jusqu'a 100")
+
+########TP3########
+#ex1
+def evaluer_naif(P,x) :
+    resultat = 0
+    for i in range(len(P)) :
+        resultat =  resultat +P[i]*x **i
+    return resultat
+
+print(evaluer_naif([2,3,0,5], 2))
+ 
+#ex2
+def evaluer(P,x): 
+    resultat = 0
+    for i in reversed(P):
+        resultat = resultat * x + i
+    return resultat
+
+print(evaluer([2,3,0,5], 2))
+
+
+#ex2.
+import time 
+
+for degre in (1000, 5000, 20000):
+    
+    P = [1] * (degre + 1)
+
+    
+    debut = time.perf_counter()
+    
+    a = evaluer_naif(P, 1.0001)
+    
+    t_naif = time.perf_counter() - debut
+
+    
+    debut = time.perf_counter()
+    
+    b = evaluer(P, 1.0001)
+    
+    t_horner = time.perf_counter() - debut
+
+    
+    print(f"degre {degre:>6} : naif {t_naif:.5f} s | horner {t_horner:.5f} s "
+          
+        f"| rapport {t_naif / t_horner:.1f} | ecart des valeurs {abs(a - b):.2e}")
+
+#3
+for degre in (200, 400, 800):
+    
+    P = [1] * (degre + 1)
+
+    
+    debut = time.perf_counter()
+    
+    a = evaluer_naif(P, 3)
+    
+    t_naif = time.perf_counter() - debut
+
+    
+    debut = time.perf_counter()
+    
+    b = evaluer(P, 3)
+    
+    t_horner = time.perf_counter() - debut
+
+    
+    print(f"degre {degre:>4} : rapport {t_naif / t_horner:.1f} | resultats egaux : {a == b}")
+
+
+
+#EX3.1
+R=[]
+def deriver(P):
+    for loop in range(1, len(P),) :
+        resultat = loop*P[loop]
+        R.append(resultat)
+    return R
+print(deriver([2,3,0,5]))
+
+#4.1
+def dichotomie(f, a, b, tolerance=1e-12):
+    """Racine de f dans [a, b], par bissection. Exige f(a) et f(b) de signes opposés."""
+    fa, fb = f(a), f(b)
+    if fa == 0:
+        return a
+    if fb == 0:
+        return b
+    if fa * fb > 0:
+        raise ValueError("f(a) et f(b) doivent etre de signes opposes")
+    while b - a > tolerance:
+        milieu = (a + b) / 2
+        if f(a) * f(milieu) <= 0:
+            b = milieu
+        else:
+            a = milieu
+    return (a + b) / 2
+
+def carre_moins_deux(x):
+    return x * x - 2
+
+racine = dichotomie(carre_moins_deux, 0, 2)
+print(racine)
+print(abs(racine - 2 ** 0.5) < 1e-9)
+
+#4.2
+def newton(P, depart, tolerance=1e-12, tours_max=100):
+    derivee = deriver(P)
+    x = float(depart)
+
+    for tour in range(tours_max):
+        valeur = evaluer(P, x)
+        pente = evaluer(derivee, x)
+
+        suivant = x - valeur / pente
+
+        if abs(suivant - x) < tolerance:
+            return suivant, tour + 1
+
+        x = suivant
+
+    return x, tours_max
+
+
+Q = [-5, -2, 0, 1]
+
+racine, tours = newton(Q, 2)
+
+print(racine, "en", tours, "tours")
+print(abs(evaluer(Q, racine)) < 1e-10)
+
+########TP4########
+# ex 1
+def calculer_transposee(mat):
+    nb_l = len(mat)
+    nb_c = len(mat[0])
+    res = []
+    for c in range(nb_c):
+        tmp = []
+        for l in range(nb_l):
+            tmp.append(mat[l][c])
+        res.append(tmp)
+    return res
+
+print("Transposée :", calculer_transposee([[1, 2, 3], [4, 5, 6]]))
+
+# correction
+def calculer_transposee(mat):
+    """Calcule la transposée d'une matrice représentée par une liste de listes."""
+    nb_l = len(mat)
+    nb_c = len(mat[0])
+    return [[mat[i][j] for i in range(nb_l)] for j in range(nb_c)]
+
+print(calculer_transposee([[1, 2, 3], [4, 5, 6]]))
+
+
+# ex 2
+# 2.1
+def multiplier_matrices(m1, m2):
+    n_l = len(m1)
+    p_k = len(m1[0])
+    q_c = len(m2[0])
+    
+    out = []
+    for _ in range(n_l):
+        out.append([0] * q_c)
+        
+    for i in range(n_l):
+        for j in range(q_c):
+            val = 0
+            for k in range(p_k):
+                val += m1[i][k] * m2[k][j]
+            out[i][j] = val
+            
+    return out
+
+id_3 = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
+mat_a = [[1, 2, 2], [1, 3, -2], [3, 5, 8]]
+print("A * identite est égal à A ?", multiplier_matrices(mat_a, id_3) == mat_a)
+
+# correction
+def multiplier_matrices(m1, m2):
+    """Calcule le produit matriciel de deux matrices."""
+    n_l, p_k = len(m1), len(m1[0])
+    if len(m2) != p_k:
+        raise ValueError("dimensions incompatibles")
+    q_c = len(m2[0])
+    out = [[0] * q_c for _ in range(n_l)]
+    for i in range(n_l):
+        for j in range(q_c):
+            val = 0
+            for k in range(p_k):
+                val += m1[i][k] * m2[k][j]
+            out[i][j] = val
+    return out
+
+id_3 = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
+mat_a = [[1, 2, 2], [1, 3, -2], [3, 5, 8]]
+print(multiplier_matrices(mat_a, id_3) == mat_a)
+print(multiplier_matrices([[1, 2], [3, 4]], [[0, 1], [1, 0]]))
+
+
+# 2.2 
+import random
+import time
+
+def gen_matrice_rand(taille):
+    grid = []
+    for i in range(taille):
+        row = []
+        for j in range(taille):
+            row.append(random.random())
+        grid.append(row)
+    return grid
+
+for dim in (40, 80, 120):
+    m1_rand = gen_matrice_rand(dim)
+    m2_rand = gen_matrice_rand(dim)
+    
+    t_start = time.perf_counter()
+    multiplier_matrices(m1_rand, m2_rand)
+    t_end = time.perf_counter()
+    
+    print("Taille", dim, "-> Temps :", round(t_end - t_start, 4), "s")
+
+# correction
+random.seed(42)
+
+def gen_matrice_rand(taille):
+    return [[random.random() for _ in range(taille)] for _ in range(taille)]
+
+for dim in (40, 80, 120):
+    m1 = gen_matrice_rand(dim)
+    m2 = gen_matrice_rand(dim)
+    t_start = time.perf_counter()
+    multiplier_matrices(m1, m2)
+    print(f"n = {dim:>3} : {time.perf_counter() - t_start:.4f} s")
+
+
+# ex 3
+# 3.1
+import numpy as np
+
+dim = 120
+m1_bench = gen_matrice_rand(dim)
+m2_bench = gen_matrice_rand(dim)
+
+t_start = time.perf_counter()
+multiplier_matrices(m1_bench, m2_bench)
+duree_py = time.perf_counter() - t_start
+
+arr_1 = np.array(m1_bench)
+arr_2 = np.array(m2_bench)
+
+t_start = time.perf_counter()
+res_np = arr_1 @ arr_2
+duree_np = time.perf_counter() - t_start
+
+print("Temps en Python pur :", round(duree_py, 4), "s")
+print("Temps avec Numpy    :", round(duree_np, 6), "s")
+print("Numpy est environ", round(duree_py / duree_np), "fois plus rapide")
+
+# correction
+import numpy as np
+
+arr_a = np.array([[1.0, 2.0, 2.0],
+                  [1.0, 3.0, -2.0],
+                  [3.0, 5.0, 8.0]])
+arr_b = np.array([2.0, -1.0, 8.0])
+
+print(arr_a.shape)
+print(arr_a.T)
+print(arr_a @ arr_a)
+print(arr_a * arr_a)
+
+dim = 120
+m1 = gen_matrice_rand(dim)
+m2 = gen_matrice_rand(dim)
+
+t_start = time.perf_counter()
+multiplier_matrices(m1, m2)
+duree_py = time.perf_counter() - t_start
+
+arr_1, arr_2 = np.array(m1), np.array(m2)
+t_start = time.perf_counter()
+arr_1 @ arr_2
+duree_np = time.perf_counter() - t_start
+
+print(f"python pur {duree_py:.4f} s")
+print(f"numpy      {duree_np:.6f} s")
+print("rapport :", round(duree_py / max(duree_np, 1e-9)))
+
+
+# ex 4
+# 4.1
+def resolution_gauss(mat_a, vect_b, tol=1e-14):
+    dim = len(mat_a)
+    aug = []
+    for idx in range(dim):
+        r = list(mat_a[idx])
+        r.append(vect_b[idx])
+        aug.append(r)
+
+    for k in range(dim):
+        idx_max = k
+        for i in range(k + 1, dim):
+            if abs(aug[i][k]) > abs(aug[idx_max][k]):
+                idx_max = i
+                
+        if abs(aug[idx_max][k]) <= tol:
+            print("Erreur : impossible à résoudre")
+            return []
+            
+        aug[k], aug[idx_max] = aug[idx_max], aug[k]
+
+        for i in range(k + 1, dim):
+            coeff = aug[i][k] / aug[k][k]
+            for j in range(k, dim + 1):
+                aug[i][j] -= coeff * aug[k][j]
+
+    sol = [0.0] * dim
+    for i in range(dim - 1, -1, -1):
+        cumul = aug[i][dim]
+        for j in range(i + 1, dim):
+            cumul -= aug[i][j] * sol[j]
+        sol[i] = cumul / aug[i][i]
+        
+    return sol
+
+mat_systeme = [[1, 2, 2], [1, 3, -2], [3, 5, 8]]
+vec_target = [2, -1, 8]
+sol_x = resolution_gauss(mat_systeme, vec_target)
+print("Solution x :", sol_x)
+
+# correction
+def resolution_gauss(mat_a, vect_b, tol=1e-14):
+    """Résolution d'un système linéaire Ax = b avec pivot de Gauss."""
+    dim = len(mat_a)
+    aug = [list(mat_a[i]) + [vect_b[i]] for i in range(dim)]
+
+    for k in range(dim):
+        piv = max(range(k, dim), key=lambda i: abs(aug[i][k]))
+        if abs(aug[piv][k]) <= tol:
+            raise ValueError("systeme singulier ou mal pose")
+        aug[k], aug[piv] = aug[piv], aug[k]
+
+        for i in range(k + 1, dim):
+            coeff = aug[i][k] / aug[k][k]
+            for j in range(k, dim + 1):
+                aug[i][j] -= coeff * aug[k][j]
+
+    sol = [0.0] * dim
+    for i in range(dim - 1, -1, -1):
+        cumul = aug[i][dim]
+        for j in range(i + 1, dim):
+            cumul -= aug[i][j] * sol[j]
+        sol[i] = cumul / aug[i][i]
+    return sol
+
+mat_a = [[1, 2, 2], [1, 3, -2], [3, 5, 8]]
+vect_b = [2, -1, 8]
+sol_x = resolution_gauss(mat_a, vect_b)
+print([round(v, 10) for v in sol_x])
+check = [sum(mat_a[i][j] * sol_x[j] for j in range(3)) for i in range(3)]
+print([round(v, 10) for v in check])
+
+
+# 4.2
+dim = 50
+mat_gde = gen_matrice_rand(dim)
+vec_gde = []
+for _ in range(dim):
+    vec_gde.append(random.random())
+
+sol_perso = resolution_gauss(mat_gde, vec_gde)
+sol_np = np.linalg.solve(np.array(mat_gde), np.array(vec_gde))
+
+diff_max = 0
+for idx in range(dim):
+    delta = abs(sol_perso[idx] - sol_np[idx])
+    if delta > diff_max:
+        diff_max = delta
+
+print("Écart maximal avec numpy :", diff_max)
+print("Écart très faible ?", diff_max < 1e-9)
+
+# correction
+random.seed(7)
+dim = 50
+mat_a = gen_matrice_rand(dim)
+vect_b = [random.random() for _ in range(dim)]
+
+sol_perso = resolution_gauss(mat_a, vect_b)
+sol_np = np.linalg.solve(np.array(mat_a), np.array(vect_b))
+diff_max = max(abs(sol_perso[i] - sol_np[i]) for i in range(dim))
+print("ecart maximal :", diff_max)
+print(diff_max < 1e-9)
+
+
+# ex 5
+# 5.1
+def gen_mat_hilbert(size):
+    data = []
+    for r in range(size):
+        row = []
+        for c in range(size):
+            row.append(1.0 / (r + c + 1))
+        data.append(row)
+    return np.array(data)
+
+dim = 12
+mat_h = gen_mat_hilbert(dim)
+v_vrai = np.ones(dim)
+b_val = mat_h @ v_vrai
+
+res_solve = np.linalg.solve(mat_h, b_val)
+res_inv = np.linalg.inv(mat_h) @ b_val
+
+print("Erreur avec solve :", float(np.max(np.abs(res_solve - v_vrai))))
+print("Erreur avec inv   :", float(np.max(np.abs(res_inv - v_vrai))))
+
+# correction
+def gen_mat_hilbert(size):
+    return np.array([[1.0 / (i + j + 1) for j in range(size)] for i in range(size)])
+
+dim = 12
+mat_h = gen_mat_hilbert(dim)
+v_vrai = np.ones(dim)
+b_val = mat_h @ v_vrai
+
+res_solve = np.linalg.solve(mat_h, b_val)
+res_inv = np.linalg.inv(mat_h) @ b_val
+
+print("erreur avec solve   :", float(np.max(np.abs(res_solve - v_vrai))))
+print("erreur avec inv @ b :", float(np.max(np.abs(res_inv - v_vrai))))
+print("conditionnement     : {:.3e}".format(float(np.linalg.cond(mat_h))))
+
+
+# ex 6
+# 6.1
+def mat_rot(rad):
+    cos_val = np.cos(rad)
+    sin_val = np.sin(rad)
+    return np.array([[cos_val, -sin_val], [sin_val, cos_val]])
+
+m_gauche = mat_rot(np.pi / 3) @ mat_rot(np.pi / 6)
+m_droite = mat_rot(np.pi / 2)
+
+print("Les matrices sont-elles équivalentes ?", np.allclose(m_gauche, m_droite))
+
+# correction
+import matplotlib.pyplot as plt
+
+def mat_rot(rad):
+    cos_val, sin_val = np.cos(rad), np.sin(rad)
+    return np.array([[cos_val, -sin_val], [sin_val, cos_val]])
+
+coords_maison = np.array([[0, 0], [2, 0], [2, 1.5], [1, 2.5], [0, 1.5], [0, 0]]).T
+
+plt.figure(figsize=(5, 5))
+plt.plot(coords_maison[0], coords_maison[1], label="depart")
+for rad in (np.pi / 6, np.pi / 3, np.pi / 2):
+    coords_rot = mat_rot(rad) @ coords_maison
+    plt.plot(coords_rot[0], coords_rot[1], label=f"rotation {int(np.degrees(rad))} degres")
+plt.axis("equal")
+plt.legend()
+plt.title("Une matrice fait tourner une figure")
+
+m_gauche = mat_rot(np.pi / 3) @ mat_rot(np.pi / 6)
+m_droite = mat_rot(np.pi / 2)
+print(np.allclose(m_gauche, m_droite))
+print(np.round(m_droite, 10))
+
+
+# ex 7
+# 7.1
+def calc_determinant(mat):
+    dim = len(mat)
+    grid = [list(row) for row in mat]
+        
+    val_det = 1.0
+    for k in range(dim):
+        piv = k
+        for i in range(k + 1, dim):
+            if abs(grid[i][k]) > abs(grid[piv][k]):
+                piv = i
+                
+        if abs(grid[piv][k]) < 1e-14:
+            return 0.0
+            
+        if piv != k:
+            grid[k], grid[piv] = grid[piv], grid[k]
+            val_det = -val_det
+            
+        val_det *= grid[k][k]
+        
+        for i in range(k + 1, dim):
+            factor = grid[i][k] / grid[k][k]
+            for j in range(k, dim):
+                grid[i][j] -= factor * grid[k][j]
+                
+    return val_det
+
+m_det = [[1, 2, 2], [1, 3, -2], [3, 5, 8]]
+print("Déterminant fait main :", calc_determinant(m_det))
+print("Déterminant Numpy     :", float(np.linalg.det(np.array(m_det, dtype=float))))
+
+# correction
+def calc_determinant(mat):
+    """Calcul du déterminant par la méthode du pivot de Gauss."""
+    dim = len(mat)
+    grid = [list(row) for row in mat]
+    val_det = 1.0
+    for k in range(dim):
+        piv = max(range(k, dim), key=lambda i: abs(grid[i][k]))
+        if abs(grid[piv][k]) < 1e-14:
+            return 0.0
+        if piv != k:
+            grid[k], grid[piv] = grid[piv], grid[k]
+            val_det = -val_det
+        val_det *= grid[k][k]
+        for i in range(k + 1, dim):
+            factor = grid[i][k] / grid[k][k]
+            for j in range(k, dim):
+                grid[i][j] -= factor * grid[k][j]
+    return val_det
+
+m_test = [[1, 2, 2], [1, 3, -2], [3, 5, 8]]
+print(calc_determinant(m_test), float(np.linalg.det(np.array(m_test, dtype=float))))
+print(calc_determinant([[1, 2], [2, 4]]))
+
+
+# ex 8
+# 8.1 Hilbert vaincue avec des fractions
+from fractions import Fraction
+
+def gen_hilbert_frac(size):
+    grid = []
+    for r in range(size):
+        row = []
+        for c in range(size):
+            row.append(Fraction(1, r + c + 1))
+        grid.append(row)
+    return grid
+
+dim = 12
+h_frac = gen_hilbert_frac(dim)
+
+b_frac = []
+for row in h_frac:
+    b_frac.append(sum(row))
+
+x_exact = resolution_gauss(h_frac, b_frac, tol=0)
+print("Solution exacte avec des fractions :", x_exact)
+
+# correction
+from fractions import Fraction
+
+def gen_hilbert_frac(size):
+    return [[Fraction(1, i + j + 1) for j in range(size)] for i in range(size)]
+
+dim = 12
+h_frac = gen_hilbert_frac(dim)
+b_frac = [sum(row) for row in h_frac]
+
+try:
+    resolution_gauss(h_frac, b_frac)
+except ValueError as err:
+    print("premier essai :", err)
+
+x_exact = resolution_gauss(h_frac, b_frac, tol=0)
+print(x_exact)
+print(all(val == 1 for val in x_exact))
+
+
+# ex 9
+# 9.1 L'ordre des opérations
+def mat_translation(dx, dy):
+    return np.array([[1.0, 0.0, dx],
+                     [0.0, 1.0, dy],
+                     [0.0, 0.0, 1.0]])
+
+def mat_rotation_homo(angle):
+    cos_val = np.cos(angle)
+    sin_val = np.sin(angle)
+    return np.array([[cos_val, -sin_val, 0.0],
+                     [sin_val, cos_val, 0.0],
+                     [0.0, 0.0, 1.0]])
+
+pt = np.array([1.0, 0.0, 1.0])
+m_trans = mat_translation(3, 1)
+m_rot = mat_rotation_homo(np.pi / 2)
+
+print("Translation puis rotation :", np.round(m_rot @ m_trans @ pt, 10))
+print("Rotation puis translation :", np.round(m_trans @ m_rot @ pt, 10))
+
+# correction
+def mat_translation(dx, dy):
+    return np.array([[1.0, 0.0, dx],
+                     [0.0, 1.0, dy],
+                     [0.0, 0.0, 1.0]])
+
+def mat_rotation_homo(angle):
+    cos_val, sin_val = np.cos(angle), np.sin(angle)
+    return np.array([[cos_val, -sin_val, 0.0],
+                     [sin_val, cos_val, 0.0],
+                     [0.0, 0.0, 1.0]])
+
+pt = np.array([1.0, 0.0, 1.0])
+m_trans = mat_translation(3, 1)
+m_rot = mat_rotation_homo(np.pi / 2)
+
+print(np.round(m_rot @ m_trans @ pt, 10))
+print(np.round(m_trans @ m_rot @ pt, 10))
+
+########TP5########
+# ex 1
+# 1.1
+def char_vers_num(lettre):
+    return ord(lettre) - ord("A")
+
+def num_vers_char(valeur):
+    # Utilisation du modulo 26 pour garantir une majuscule valide
+    return chr((valeur % 26) + ord("A"))
+
+print("La lettre C donne :", char_vers_num("C"))
+print("Le nombre 2 donne :", num_vers_char(2))
+
+# correction
+def char_vers_num(lettre):
+    """Numéro de 0 à 25 d'une lettre majuscule."""
+    return ord(lettre) - ord("A")
+
+def num_vers_char(valeur):
+    """Lettre majuscule correspondant à un numéro de 0 à 25."""
+    return chr(valeur % 26 + ord("A"))
+
+print(char_vers_num("C"), num_vers_char(2))
+print([num_vers_char(char_vers_num(c)) == c for c in "ABCXYZ"])
+
+
+# 1.2 
+import unicodedata
+
+def epurer_chaine(chaine):
+    # Suppression des éléments diacritiques
+    decompose = unicodedata.normalize("NFD", chaine)
+    out = ""
+    
+    # Parcours individuel des caractères
+    for char in decompose:
+        # Exclusion des marques d'accentuation (Mn)
+        if unicodedata.category(char) != "Mn":
+            maj = char.upper()
+            # Conservation uniquement des caractères alphabétiques A-Z
+            if "A" <= maj <= "Z":
+                out += maj
+                
+    return out
+
+print("Texte nettoyé :", epurer_chaine("Été, à Paris !"))
+
+# correction
+def epurer_chaine(chaine):
+    """Majuscules sans accents, lettres A-Z uniquement."""
+    decompose = unicodedata.normalize("NFD", chaine)
+    decompose = "".join(char for char in decompose if unicodedata.category(char) != "Mn")
+    return "".join(char for char in decompose.upper() if "A" <= char <= "Z")
+
+print(epurer_chaine("Été, à Paris !"))
+
+
+# ex 2
+# 2.1
+def encodage_affine(chaine, alpha, beta):
+    source = epurer_chaine(chaine)
+    buff = ""
+    
+    for symbol in source:
+        pos = char_vers_num(symbol)
+        nouv_pos = (alpha * pos + beta) % 26
+        buff += num_vers_char(nouv_pos)
+        
+    return buff
+
+msg_test = "ATTAQUEALAUBE"
+print("Chiffrement affine :", encodage_affine(msg_test, 5, 8))
+print("Chiffrement César :", encodage_affine(msg_test, 1, 3))
+
+# correction
+def encodage_affine(chaine, alpha, beta):
+    """Chiffrement affine de texte avec la clé (a, b)."""
+    buff = []
+    for symbol in epurer_chaine(chaine):
+        pos = char_vers_num(symbol)
+        buff.append(num_vers_char((alpha * pos + beta) % 26))
+    return "".join(buff)
+
+msg_test = "ATTAQUEALAUBE"
+print(encodage_affine(msg_test, 5, 8))
+print(encodage_affine(msg_test, 1, 3))   # le chiffre de César
+
+
+# ex 3
+# 3.1
+def calcul_pgcd(val1, val2):
+    while val2 != 0:
+        rem = val1 % val2
+        val1 = val2
+        val2 = rem
+    return val1
+
+coeff_valides = []
+for k in range(1, 26):
+    if calcul_pgcd(k, 26) == 1:
+        coeff_valides.append(k)
+
+print("Valeurs valides pour a :", coeff_valides)
+print("Nombre de valeurs :", len(coeff_valides))
+
+# correction
+coeff_valides = [k for k in range(1, 26) if calcul_pgcd(k, 26) == 1]
+print(coeff_valides)
+print(len(coeff_valides), "valeurs possibles pour a")
+
+
+# 3.2
+def trouvez_inverse_mod(val, mod):
+    val = val % mod
+    for test in range(1, mod):
+        if (val * test) % mod == 1
+
+########TP6########
+import math
+
+# #ex 1
+
+# 1.1 La boîte à outils géométrique
+def calc_vecteur(pt_a, pt_b):
+    return (pt_b[0] - pt_a[0], pt_b[1] - pt_a[1])
+
+def dot_product(u_vec, v_vec):
+    return u_vec[0] * v_vec[0] + u_vec[1] * v_vec[1]
+
+def longeur_norme(vec):
+    return math.hypot(vec[0], vec[1])
+
+def ecart_angulaire(u_vec, v_vec):
+    # Calcul du cosinus avec précaution contre les arrondis
+    val_cos = dot_product(u_vec, v_vec) / (longeur_norme(u_vec) * longeur_norme(v_vec))
+    if val_cos > 1.0:
+        val_cos = 1.0
+    elif val_cos < -1.0:
+        val_cos = -1.0
+    
+    # Transformation du cosinus en angle (en degrés)
+    return math.degrees(math.acos(val_cos))
+
+print("Norme de (3,4) :", longeur_norme((3, 4)))
+print("Produit scalaire :", dot_product((1, 2), (3, 4)))
+print("Angle 1 :", ecart_angulaire((1, 0), (1, 1)))
+print("Angle 2 :", ecart_angulaire((1, 0), (0, 1)))
+print("Angle 3 :", ecart_angulaire((2, 0), (2, 0)))
+
+# correction
+def calc_vecteur(pt_a, pt_b):
+    """Vecteur AB, de A vers B."""
+    return (pt_b[0] - pt_a[0], pt_b[1] - pt_a[1])
+
+def dot_product(u_vec, v_vec):
+    return u_vec[0] * v_vec[0] + u_vec[1] * v_vec[1]
+
+def longeur_norme(vec):
+    return math.hypot(vec[0], vec[1])
+
+def ecart_angulaire(u_vec, v_vec):
+    """Angle non orienté entre u et v, en degrés."""
+    val_cos = dot_product(u_vec, v_vec) / (longeur_norme(u_vec) * longeur_norme(v_vec))
+    val_cos = max(-1.0, min(1.0, val_cos))
+    return math.degrees(math.acos(val_cos))
+
+print(longeur_norme((3, 4)), dot_product((1, 2), (3, 4)))
+print(ecart_angulaire((1, 0), (1, 1)), ecart_angulaire((1, 0), (0, 1)))
+print(ecart_angulaire((2, 0), (2, 0)))
+
+# 1.2 La distance d'un point à une droite
+def det_2d(u_vec, v_vec):
+    return u_vec[0] * v_vec[1] - u_vec[1] * v_vec[0]
+
+def dist_pt_droite(pt_p, pt_a, pt_b):
+    v_ab = calc_vecteur(pt_a, pt_b)
+    v_ap = calc_
