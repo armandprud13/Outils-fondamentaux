@@ -9,17 +9,14 @@ can.grid(row=1, column=1)
 
 #tp6
 def calc_vecteur(pt_a, pt_b):
-    """Calcule le vecteur AB (TP6)."""
     return (pt_b[0] - pt_a[0], pt_b[1] - pt_a[1])
 
 def longeur_norme(vec):
-    """Calcule la norme d'un vecteur (TP6)."""
     return math.hypot(vec[0], vec[1])
 
 #tp1
 
 def presque_egaux(a, b):
-    """Vérifie si deux flottants sont presque égaux (TP1)."""
     return abs(a - b) < 1e-5
 
 
@@ -43,28 +40,25 @@ joueur = randint(1, 2)
 partie_finie = False
 
 def gagnant():
-    # 1. Vérification horizontale
     for ligne in range(6):
         for col in range(4):
             if grille[ligne][col] == grille[ligne][col+1] == \
                grille[ligne][col+2] == grille[ligne][col+3] != 0:
                 return grille[ligne][col]
 
-    # 2. Vérification verticale
+
     for ligne in range(3):
         for col in range(7):
             if grille[ligne][col] == grille[ligne+1][col] == \
                grille[ligne+2][col] == grille[ligne+3][col] != 0:
                  return grille[ligne][col]
 
-    # 3. Vérification diagonale descendante (\)
     for ligne in range(3):
         for col in range(4):
             if grille[ligne][col] == grille[ligne+1][col+1] == \
                grille[ligne+2][col+2] == grille[ligne+3][col+3] != 0:
                 return grille[ligne][col]
 
-    # 4. Vérification diagonale montante (/)
     for ligne in range(3, 6):
         for col in range(4):
             if grille[ligne][col] == grille[ligne-1][col+1] == \
